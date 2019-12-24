@@ -18,7 +18,8 @@ class Teamspeak(TeamspeakAbstract):
         self.nextAvaibleQuery = 0
         self.queryInterval = 800
         self.connection = False
-    
+        self.clid = None
+
     def connect(self):
         # Create socket object
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -35,6 +36,12 @@ class Teamspeak(TeamspeakAbstract):
         if self.lastErrorId != 0:
             return False
 
+        # Get own clid
+        result = self.query('whoami').items[0]
+        if self.lastErrorId != 0:
+            return False
+        
+        self.clid = result.client_id
         return True
 
     def query(self, query):
@@ -53,6 +60,7 @@ class Teamspeak(TeamspeakAbstract):
         self.nextAvaibleQuery = int(time() * 1000 + self.queryInterval)
 
         # Send query to teamspeak server
+        print('=======> ', query)
         self.connection.send('{}\n'.format(query).encode('utf-8'))
         
         # Receive data until error message occurs

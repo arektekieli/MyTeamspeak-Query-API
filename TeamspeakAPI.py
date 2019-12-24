@@ -16,13 +16,10 @@ class TeamspeakAPI(Teamspeak):
     def clientinfo(self, client):
         # Returns TeamspeakResultItem object
         # client must be clid or TeamspeakClient class
-        try:
-            if isinstance(client, TeamspeakClient):
-                return self.safeQuery('clientinfo clid={}'.format(client.clid)).items[0]
-            else:
-                return self.safeQuery('clientinfo clid={}'.format(client)).items[0]
-        except:
-            return False
+        if isinstance(client, TeamspeakClient):
+            client = client.clid
+        
+        return self.safeQuery('clientinfo clid={}'.format(client)).items[0]
 
     def clientlist(self):
         # Returns list of TeamspeakClient objects
@@ -31,5 +28,23 @@ class TeamspeakAPI(Teamspeak):
             return False
         
         return [TeamspeakClient(self, x) for x in result.fetch()]
+
+    def clientmove(self, clid, cid, cpw=''):
+        if isinstance(clid, TeamspeakClient):
+            clid = clid.clid
+
+        return self.safeQuery('clientmove clid={} cid={} cpw={}'.format(clid, cid, cpw))
         
+    def sendtextmessage(self, msg, targetmode, target=False):
+        # Sends message to channel or client
+        # 1: client 2: channel 3: global message
+        if isinstance(target, TeamspeakClient):
+            target = target.clid
+
+        return self.safeQuery('sendtextmessage targetmode={} target={} msg={}'.format(targetmode, target, msg))
+
+    def whoami(self):
+        return self.safeQuery('whoami').items[0]
+
+    
         

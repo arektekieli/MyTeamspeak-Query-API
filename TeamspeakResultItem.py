@@ -1,9 +1,10 @@
 from TeamspeakAbstract import TeamspeakAbstract
 
 class TeamspeakResultItem(TeamspeakAbstract):
-    def __init__(self, args):
+    def __init__(self, attrs):
         super().__init__()
-        for arg in args:
+        self.attrs = attrs
+        for arg in attrs:
             for key, val in arg.items():
                 setattr(self, key, val)
         
