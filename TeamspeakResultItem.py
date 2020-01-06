@@ -7,4 +7,7 @@ class TeamspeakResultItem(TeamspeakAbstract):
         for arg in attrs:
             for key, val in arg.items():
                 setattr(self, key, val)
+
+    def toList(self):
+        return [attr for attr in self.attrs]
         

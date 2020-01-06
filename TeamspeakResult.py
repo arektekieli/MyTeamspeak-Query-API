@@ -23,6 +23,8 @@ class TeamspeakResult(TeamspeakAbstract):
             self.items.append(TeamspeakResultItem(attributes))
         self.setError(self.txt)
 
-    def fetch(self):
-        for item in self.items:
-            yield item
+    def fetchAll(self):
+        return self.items
+
+    def toList(self):
+        return self.fetchAll()

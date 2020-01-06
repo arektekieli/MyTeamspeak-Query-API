@@ -1,2 +1,3 @@
 go.py
 __pycache__
+*.pyc

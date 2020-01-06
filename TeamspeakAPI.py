@@ -1,5 +1,6 @@
 from Teamspeak import Teamspeak
 from TeamspeakClient import TeamspeakClient
+from TeamspeakChannel import TeamspeakChannel
 
 class TeamspeakAPI(Teamspeak):
     def __init__(self, host, port, sid, login, password, nick='ArasBot'):
@@ -11,7 +12,27 @@ class TeamspeakAPI(Teamspeak):
         if self.lastErrorId != 0:
             return False
 
-        return result 
+        return result
+
+    def switchChannel(self, cid, cpw=''):
+        # Switch channel of current teamspeak instance
+        return self.clientmove(self.clid, cid, cpw)
+
+    def channelinfo(self, cid):
+        # Returns TeamspeakResultItem object
+        # channel must be cid or TeamspeakChannel class
+        if isinstance(cid, TeamspeakChannel):
+            cid = cid.cid
+        
+        return self.safeQuery('channelinfo cid={}'.format(cid)).items[0]
+    
+    def channellist(self):
+        # Returns list of TeamspeakClient objects
+        result = self.safeQuery('channellist')
+        if result == False:
+            return False
+        
+        return [TeamspeakChannel(self, x) for x in result.fetchAll()]
 
     def clientinfo(self, client):
         # Returns TeamspeakResultItem object
@@ -27,7 +48,7 @@ class TeamspeakAPI(Teamspeak):
         if result == False:
             return False
         
-        return [TeamspeakClient(self, x) for x in result.fetch()]
+        return [TeamspeakClient(self, x) for x in result.fetchAll()]
 
     def clientmove(self, clid, cid, cpw=''):
         if isinstance(clid, TeamspeakClient):
@@ -37,7 +58,7 @@ class TeamspeakAPI(Teamspeak):
         
     def sendtextmessage(self, msg, targetmode, target=False):
         # Sends message to channel or client
-        # 1: client 2: channel 3: global message
+        # targetmode: 1 -> client 2 -> channel 3 -> global message
         if isinstance(target, TeamspeakClient):
             target = target.clid
 

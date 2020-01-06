@@ -27,3 +27,7 @@ class TeamspeakAbstract():
         for attr in self.attributes:
             if hasattr(resultItem, attr):
                 setattr(self, attr, getattr(resultItem, attr))
+
+    
+
+    

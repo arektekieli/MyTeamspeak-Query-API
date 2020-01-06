@@ -14,4 +14,6 @@ class TeamspeakClient(TeamspeakAbstract):
         x = self.teamspeak.clientinfo(self)
         self.updateAttributes(x)
     
+    def toList(self):
+        return [{attr: getattr(self, attr)} for attr in self.attributes]
         
