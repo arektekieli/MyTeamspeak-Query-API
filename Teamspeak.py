@@ -5,12 +5,11 @@ import re
 from time import sleep, time
 
 class Teamspeak(TeamspeakAbstract):
-    def __init__(self, host, port, sid, login, password, nick='ArasBot'):
+    def __init__(self, host, port, username, password, nick='ArasBot'):
         super().__init__()
         self.host = host                
-        self.port = port                
-        self.sid = sid
-        self.login = login
+        self.port = port
+        self.username = username
         self.password = password
         self.nick = nick
         self.lastErrorId = 0
@@ -25,23 +24,12 @@ class Teamspeak(TeamspeakAbstract):
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connection.connect((self.host, self.port))
 
-    def logIn(self):
+    def authenticate(self):
         # Login to Teamspeak server as a query client
-        self.query('login {} {}'.format(self.login, self.password))
-        if self.lastErrorId != 0:
-            return False
-        
-        # Select server ID
-        self.query('use sid={}'.format(self.sid))
+        self.query('login {} {}'.format(self.username, self.password))
         if self.lastErrorId != 0:
             return False
 
-        # Get own clid
-        result = self.query('whoami').items[0]
-        if self.lastErrorId != 0:
-            return False
-        
-        self.clid = result.client_id
         return True
 
     def query(self, query):
@@ -66,7 +54,7 @@ class Teamspeak(TeamspeakAbstract):
         # Receive data until error message occurs
         return TeamspeakResult(self.receiveUntilError())
 
-    def recvUntil(self, text, data=b''):
+    '''def recvUntil(self, text, data=b''):
         # Receive data from socket until specific pattern occurs
         while text not in data[(len(text) * -1):]:
             d = self.connection.recv(1024)
@@ -74,7 +62,7 @@ class Teamspeak(TeamspeakAbstract):
                 return False
             
             data += d.decode('ascii', 'ignore')
-        return data
+        return data'''
 
     def receiveUntilError(self):
         data = ''

@@ -10,4 +10,11 @@ class TeamspeakResultItem(TeamspeakAbstract):
 
     def toList(self):
         return [attr for attr in self.attrs]
+
+    def toDict(self):
+        res = {}
+        for attr in self.attrs:
+            res.update(attr)
+            
+        return res
         

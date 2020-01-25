@@ -16,4 +16,11 @@ class TeamspeakClient(TeamspeakAbstract):
     
     def toList(self):
         return [{attr: getattr(self, attr)} for attr in self.attributes]
+
+    def toDict(self):
+        res = {}
+        for attr in self.attributes:
+            res.update({attr: getattr(self, attr)})
+            
+        return res
         
