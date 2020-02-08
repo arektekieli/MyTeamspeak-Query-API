@@ -2,3 +2,4 @@ go.py
 __pycache__
 *.pyc
 mydocs
+.vscode
