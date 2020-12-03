@@ -36,6 +36,11 @@ class TeamspeakAPI(Teamspeak):
          
         return ' '.join(response)
 
+    def setQueryInterval(self, interval):
+        self.interval = interval
+
+    # Teamspeak functions
+
     def bindinglist(self, **kwargs):
         params = self.makeParams(kwargs)
         return self.safeQuery('bindinglist {}'.format(params))
