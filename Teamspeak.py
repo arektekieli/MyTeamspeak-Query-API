@@ -1,5 +1,6 @@
 from TeamspeakAbstract import TeamspeakAbstract
 from TeamspeakResult import TeamspeakResult
+import select
 import socket
 import re
 from time import sleep, time
@@ -63,6 +64,17 @@ class Teamspeak(TeamspeakAbstract):
             
             data += d.decode('ascii', 'ignore')
         return data'''
+
+    def receiveNotifyTextMessage(self):
+        data = ""
+        while True:
+            socket_list = [self.connection]
+            r, w, e = select.select(socket_list, [], [])
+            for sock in r:
+                if sock == self.connection:
+                    data = data + sock.recv(4096).decode("utf-8")
+                    if "\n\r" in data:
+                        return TeamspeakResult(data)
 
     def receiveUntilError(self):
         data = ''

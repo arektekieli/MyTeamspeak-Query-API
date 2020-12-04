@@ -37,7 +37,7 @@ class TeamspeakAPI(Teamspeak):
         return ' '.join(response)
 
     def setQueryInterval(self, interval):
-        self.interval = interval
+        self.queryInterval = interval
 
     # Teamspeak functions
 
