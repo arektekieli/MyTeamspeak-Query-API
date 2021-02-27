@@ -69,12 +69,14 @@ class Teamspeak(TeamspeakAbstract):
         data = ""
         while True:
             socket_list = [self.connection]
-            r, w, e = select.select(socket_list, [], [])
+            r, w, e = select.select(socket_list, [], [], 60)
             for sock in r:
                 if sock == self.connection:
                     data = data + sock.recv(4096).decode("utf-8")
                     if "\n\r" in data:
-                        return TeamspeakResult(data)
+                        return TeamspeakResult(data).toList()[0]
+
+            return None
 
     def receiveUntilError(self):
         data = ''
